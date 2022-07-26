@@ -14,7 +14,6 @@ import java.net.URL;
 public class Summoner {
     private final String summonerName;
     private final Region server;
-
     private int summonerLevel;
     private int profileIconID;
     private String puuID;
@@ -31,6 +30,7 @@ public class Summoner {
         URL summonerProfile = new URL("https://" + server + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + summonerName + new ApiKey().getAPI_KEY());
         BufferedReader in = new BufferedReader(new InputStreamReader(summonerProfile.openStream()));
         String lolAPIJson = in.readLine();
+        in.close();
         System.out.println(lolAPIJson);
 
         JSONObject lolAPI = new JSONObject(lolAPIJson);
