@@ -1,6 +1,6 @@
-package de.blueteawolf.riotstats;
+package de.blueteawolf.riotstats.stats;
 
-import org.json.simple.parser.ParseException;
+import de.blueteawolf.riotstats.ApiKey;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class Match {
         return detailedMatchInformation;
     }
 
-    public void getDetailedMatchInformation() throws ParseException {
+    public void getDetailedMatchInformation() {
         MatchAnalyzer matchAnalyzer = new MatchAnalyzer();
         matchAnalyzer.analyzeMatch(detailedMatchInformation);
     }

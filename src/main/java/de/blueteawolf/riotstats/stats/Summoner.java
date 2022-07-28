@@ -1,6 +1,7 @@
-package de.blueteawolf.riotstats;
+package de.blueteawolf.riotstats.stats;
 
 
+import de.blueteawolf.riotstats.ApiKey;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;

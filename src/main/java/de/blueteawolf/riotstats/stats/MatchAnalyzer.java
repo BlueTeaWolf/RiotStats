@@ -1,8 +1,7 @@
-package de.blueteawolf.riotstats;
+package de.blueteawolf.riotstats.stats;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.simple.parser.ParseException;
 
 /**
  * @author BlueTeaWolf
@@ -53,7 +52,7 @@ public class MatchAnalyzer {
     private double teamDamagePercentage;
     private int objectivesStolen;
 
-    public void analyzeMatch(StringBuilder detailedMatchInformationJson) throws ParseException {
+    public void analyzeMatch(StringBuilder detailedMatchInformationJson) {
 
         matchAnalyzeJson = detailedMatchInformationJson;
 
@@ -64,7 +63,7 @@ public class MatchAnalyzer {
 //        }
     }
 
-    private void analyzeMatch(int participantNumber) throws ParseException {
+    private void analyzeMatch(int participantNumber) {
 
         JSONObject matchJson = new JSONObject(matchAnalyzeJson.toString());
 

@@ -1,4 +1,4 @@
-package de.blueteawolf.riotstats;
+package de.blueteawolf.riotstats.stats;
 
 /**
  * @author BlueTeaWolf
