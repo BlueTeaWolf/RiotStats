@@ -1,9 +1,14 @@
-package de.blueteawolf.riotstats.stats;
+package de.blueteawolf.riotstats.summoner;
 
 
 import de.blueteawolf.riotstats.ApiKey;
+import de.blueteawolf.riotstats.stats.Region;
 import org.json.JSONObject;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +17,16 @@ import java.net.URL;
 /**
  * @author BlueTeaWolf
  */
+@Entity
+@Table
 public class Summoner {
+     @Id
+     @SequenceGenerator(
+             name = "summoner_sequence",
+             sequenceName = "summoner_sequence",
+             allocationSize = 1
+     )
+
     private final String summonerName;
     private final Region server;
     private int summonerLevel;
@@ -20,7 +34,6 @@ public class Summoner {
     private String puuID;
     private String accountID;
     private String id;
-
 
     public Summoner(String summonerName, Region server){
         this.summonerName = summonerName;
