@@ -1,9 +1,5 @@
 package de.blueteawolf.riotstats;
 
-import de.blueteawolf.riotstats.stats.Match;
-import de.blueteawolf.riotstats.stats.MatchAnalyzer;
-import de.blueteawolf.riotstats.stats.Region;
-import de.blueteawolf.riotstats.stats.Summoner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

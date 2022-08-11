@@ -1,14 +1,10 @@
-package de.blueteawolf.riotstats.summoner;
-
+package de.blueteawolf.riotstats.api;
 
 import de.blueteawolf.riotstats.ApiKey;
-import de.blueteawolf.riotstats.stats.Region;
+import lombok.Getter;
 import org.json.JSONObject;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,15 +15,11 @@ import java.net.URL;
  */
 @Entity
 @Table
+@Getter
 public class Summoner {
      @Id
-     @SequenceGenerator(
-             name = "summoner_sequence",
-             sequenceName = "summoner_sequence",
-             allocationSize = 1
-     )
-
     private final String summonerName;
+     @Enumerated(EnumType.STRING)
     private final Region server;
     private int summonerLevel;
     private int profileIconID;
@@ -54,33 +46,5 @@ public class Summoner {
         puuID = lolAPI.getString("puuid");
         accountID = lolAPI.getString("accountId");
         id = lolAPI.getString("id");
-    }
-
-    public String getSummonerName() {
-        return summonerName;
-    }
-
-    public Region getServer() {
-        return server;
-    }
-
-    public int getSummonerLevel() {
-        return summonerLevel;
-    }
-
-    public int getProfileIconID() {
-        return profileIconID;
-    }
-
-    public String getPuuID() {
-        return puuID;
-    }
-
-    public String getAccountID() {
-        return accountID;
-    }
-
-    public String getId() {
-        return id;
     }
 }
