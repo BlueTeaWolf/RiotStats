@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>BlueRiotStats</title>
+    <div class="header">
+        <h1>BlueRiotStats</h1>
+    </div>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<form action="summoner" method="post">
+    <div class="search">
+        <div class="search-input-wrapper">
+            <div class="search-input">
+                <label for="summonerName"></label>
+                <label>
+                    <input type="text" name="summonerName" placeholder="Summoner Name">
+                </label>
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+</form>
+
+<img class="pengu-league" src="../static/images/Pengu_1.png" th:src="@{images/Pengu_1.png}"/>
+</body>
+</html>
