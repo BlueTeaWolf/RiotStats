@@ -1,6 +1,7 @@
 package de.blueteawolf.riotstats.api;
 
 import de.blueteawolf.riotstats.ApiKey;
+import lombok.Builder;
 import lombok.Getter;
 import org.json.JSONObject;
 
@@ -16,11 +17,12 @@ import java.net.URL;
 @Entity
 @Table
 @Getter
+@Builder
 public class Summoner {
      @Id
-    private final String summonerName;
+    private String summonerName;
      @Enumerated(EnumType.STRING)
-    private final Region server;
+    private Region server;
     private int summonerLevel;
     private int profileIconID;
     private String puuID;
@@ -30,6 +32,21 @@ public class Summoner {
     public Summoner(String summonerName, Region server){
         this.summonerName = summonerName;
         this.server = server;
+    }
+
+    public Summoner() {
+
+    }
+
+    public Summoner(String summonerName, Region server, int summonerLevel, int profileIconID, String puuID, String accountID, String id) {
+
+        this.summonerName = summonerName;
+        this.server = server;
+        this. summonerLevel = summonerLevel;
+        this.profileIconID = profileIconID;
+        this.puuID = puuID;
+        this.accountID = accountID;
+        this.id = id;
     }
 
     public void getProfile() throws IOException {

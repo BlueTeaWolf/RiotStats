@@ -10,7 +10,7 @@ public class MatchAnalyzer {
 
     private StringBuilder matchAnalyzeJson;
     private String summonerName;
-    private String role;
+    private Role role;
     private int profileIcon;
 
     private String gameMode;
@@ -76,7 +76,7 @@ public class MatchAnalyzer {
 
         JSONObject challenges = participant.getJSONObject("challenges");
 
-        role = participant.getString("individualPosition");
+        role = Role.valueOf(participant.getString("individualPosition"));
         quadraKills = participant.getInt("quadraKills");
         tripleKills = participant.getInt("tripleKills");
         assists = participant.getInt("assists");

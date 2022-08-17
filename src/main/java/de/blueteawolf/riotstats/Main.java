@@ -1,7 +1,12 @@
 package de.blueteawolf.riotstats;
 
+import de.blueteawolf.riotstats.api.Region;
+import de.blueteawolf.riotstats.api.Summoner;
+import de.blueteawolf.riotstats.summoner.SummonerRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
 
@@ -34,8 +39,6 @@ public class Main {
 //
 //        MatchAnalyzer matchAnalyzer = new MatchAnalyzer();
 //        matchAnalyzer.analyzeMatch(matches.getMatchDetails(1));
-
-
     }
 
 

@@ -2,7 +2,7 @@
     margin: 1.5rem;
     padding: 0;
     /*background-color: #282B38;*/
-    background-color: #FAFAFA;
+    background: #FAFAFA;
     box-sizing: border-box;
 }
 
@@ -13,7 +13,7 @@ h1 {
 }
 
 .header {
-    padding: 10px;
+    padding: 15px;
     text-align: center;
     background: #9F61D6;
     color: white;
@@ -24,7 +24,6 @@ h1 {
     background-color: transparent;
     width: 100%;
     height: 5rem;
-    /*background-color: aqua;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,13 +54,14 @@ h1 {
 }
 
 .search {
-   position: center;
+    position: center;
     margin-top: 30rem;
     align-items: center;
+    margin-left: 20rem;
 }
 
 .pengu-league {
     width: 700px;
-    margin-left: 15rem;
-    margin-top: -20rem;
+    margin-left: 7rem;
+    margin-top: -27rem;
 }
