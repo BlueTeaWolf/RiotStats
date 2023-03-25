@@ -1,8 +1,30 @@
 <html xmlns:th="https://thymeleaf.org" lang="en">
-<table>
-    <tr>
-        <td><h4>User Name: </h4></td>
-        <td><h4 th:text="${summoner}"></h4></td>
-    </tr>
-</table>
+<form th:action="@{/summonerInformation}" method="get">
+    <table>
+        <tr>
+            <td><h4>Summoner name:</h4></td>
+            <td><h4 th:text="${summoner.summonerName}"></h4></td>
+        </tr>
+        <tr>
+            <td><h4>Account ID:</h4></td>
+            <td><h4 th:text="${summoner.accountID}"></h4></td>
+        </tr>
+        <tr>
+            <td><h4>ID:</h4></td>
+            <td><h4 th:text="${summoner.id}"></h4></td>
+        </tr>
+        <tr>
+            <td><h4>PUUID:</h4></td>
+            <td><h4 th:text="${summoner.puuID}"></h4></td>
+        </tr>
+        <tr>
+            <td><h4>Server:</h4></td>
+            <td><h4 th:text="${summoner.server}"></h4></td>
+        </tr>
+        <tr>
+            <td><h4>Summoner level:</h4></td>
+            <td><h4 th:text="${summoner.summonerLevel}"></h4></td>
+        </tr>
+    </table>
+</form>
 </html>

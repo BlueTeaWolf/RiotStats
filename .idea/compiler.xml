@@ -8,11 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="RiotStatsTest" />
+        <module name="RiotStats" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="RiotStats" options="-parameters" />
       <module name="RiotStatsTest" options="-parameters" />
     </option>
   </component>
