@@ -1,67 +1,104 @@
-* {
-    margin: 1.5rem;
-    padding: 0;
-    /*background-color: #282B38;*/
-    background: #FAFAFA;
-    box-sizing: border-box;
+body {
+    background-color: #f8f9fa;
 }
 
-h1 {
-    font-size: 3rem;
-    font-family: 'Roboto Light', sans-serif;
-    background-color: #9F61D6;
-}
-
-.header {
-    padding: 15px;
-    text-align: center;
-    background: #9F61D6;
-    color: white;
-    font-size: 30px;
-}
-
-.search-input-wrapper {
-    background-color: transparent;
-    width: 100%;
-    height: 5rem;
+.jumbotron {
+    background-color: #f8f9fa;
+    border-radius: 0;
+    /*border-top: 3px solid #007bff;*/
+    /*height: 200px;*/
     display: flex;
     justify-content: center;
-    align-items: center;
-    move-to: left;
+    /*align-items: center;*/
+    margin-bottom: 0;
+    height: auto;
+    padding: 0rem;
+    align-items: flex-end;
 }
 
-.search-input {
-    width: 30rem;
+.container {
+    display: flex;
+    flex: 2 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
+
+.navbar-brand {
     display: flex;
     align-items: center;
 }
 
-.search-input input {
-    width: 27rem;
-    background-color: transparent;
-    border: none;
-    border-bottom: 0.1rem solid;
-    font-size: 2.5rem;
-    letter-spacing: .05rem;
-    margin-right: 1rem;
-    outline: none;
+.navbar-brand img {
+    margin-right: 10px;
 }
 
-.search-input i {
-    font-size: 1.5rem;
-    color: black;
-    cursor: pointer;
+.form-control {
+    width: 300px;
 }
 
-.search {
-    position: center;
-    margin-top: 30rem;
+#text {
+    font-size: 48px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    border-right: 3px solid #007bff;
+}
+
+.navbar-brand {
+    display: flex;
     align-items: center;
-    margin-left: 20rem;
+    padding: 10px;
+    border-right: 3px solid #007bff;
 }
 
-.pengu-league {
-    width: 700px;
-    margin-left: 7rem;
-    margin-top: -27rem;
+.navbar-brand img {
+    margin-right: 10px;
 }
+
+.container-fluid {
+    padding: 0;
+}
+
+.border-top {
+    border-top: 3px solid #007bff;
+}
+
+.border-right {
+    border-right: 3px solid #007bff;
+}
+
+.typing-text {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.input-group {
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-group .form-control {
+    margin-bottom: 10px;
+}
+
+@media screen and (min-width: 768px) {
+    .input-group {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .input-group .form-control {
+        margin-right: 10px;
+        margin-bottom: 0;
+    }
+}
+
+.test {
+    border-bottom: 3px solid #007bff;
+}
+
