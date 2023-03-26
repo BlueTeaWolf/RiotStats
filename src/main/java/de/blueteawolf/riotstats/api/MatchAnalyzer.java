@@ -57,7 +57,6 @@ public class MatchAnalyzer {
         matchAnalyzeJson = detailedMatchInformationJson;
 
 
-
 //        for (int i = 0; i < 9; i++) {
             analyzeMatch(1);
 //        }
