@@ -1,11 +1,16 @@
 package de.blueteawolf.riotstats.api;
 
 import de.blueteawolf.riotstats.ApiKey;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import org.json.JSONObject;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
+//import javax.persistence.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,6 +32,7 @@ public class Summoner {
     private int profileIconID;
     private String puuID;
     private String accountID;
+    @jakarta.persistence.Id
     private String id;
 
     public Summoner(String summonerName, Region server){
