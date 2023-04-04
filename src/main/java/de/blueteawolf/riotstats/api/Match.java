@@ -27,22 +27,22 @@ public class Match {
         this.puuID = puuID;
     }
 
-    public String getMatches(int countMatch) throws IOException {
-        if (countMatch > 100 || countMatch < 1) {
+    public String getMatches(int matches) throws IOException {
+        if (matches > 100 || matches < 1) {
             return null;
         }
         URL matchSite = new URL("https://"
                 + region
                 + ".api.riotgames.com/lol/match/v5/matches/by-puuid/"
                 + puuID
-                + "/ids?start=0&count=" + countMatch + new ApiKey().getMATCH_API_KEY());
+                + "/ids?start=0&count=" + matches + new ApiKey().getMATCH_API_KEY());
         BufferedReader in = new BufferedReader(new InputStreamReader(matchSite.openStream()));
         matchLogJson = new StringBuilder(in.readLine());
         in.close();
 
-        for (int i = 1; i <= countMatch; i++) {
+        for (int i = 1; i <= matches; i++) {
             int lengthOfCode = matchLogJson.indexOf("E");
-            matches.put(i, matchLogJson.substring(lengthOfCode, lengthOfCode + 15));
+            this.matches.put(i, matchLogJson.substring(lengthOfCode, lengthOfCode + 15));
             matchLogJson.deleteCharAt(lengthOfCode);
         }
         return matchLogJson.toString();
@@ -65,8 +65,4 @@ public class Match {
         return detailedMatchInformation;
     }
 
-    public void getDetailedMatchInformation() {
-        MatchAnalyzer matchAnalyzer = new MatchAnalyzer();
-        matchAnalyzer.analyzeMatch(detailedMatchInformation);
-    }
 }
