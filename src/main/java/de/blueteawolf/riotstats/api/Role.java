@@ -5,6 +5,6 @@ package de.blueteawolf.riotstats.api;
  */
 public enum Role {
 
-    TOP, MID, JUNGLE, ADC, SUPPORT
+    TOP, MIDDLE, JUNGLE, ADC, SUPPORT, UTILITY
 
 }
