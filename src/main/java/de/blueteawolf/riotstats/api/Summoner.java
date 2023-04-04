@@ -5,14 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 import org.json.JSONObject;
 import org.springframework.data.annotation.Id;
 
-//import javax.persistence.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -22,20 +19,20 @@ import java.net.URL;
 @Entity
 @Table
 @Getter
-@Builder
+//@Builder
 public class Summoner {
-     @Id
+    @Id
+    @jakarta.persistence.Id
     private String summonerName;
-     @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Region server;
     private int summonerLevel;
     private int profileIconID;
     private String puuID;
     private String accountID;
-    @jakarta.persistence.Id
     private String id;
 
-    public Summoner(String summonerName, Region server){
+    public Summoner(String summonerName, Region server) {
         this.summonerName = summonerName;
         this.server = server;
     }
@@ -44,30 +41,23 @@ public class Summoner {
 
     }
 
-    public Summoner(String summonerName, Region server, int summonerLevel, int profileIconID, String puuID, String accountID, String id) {
+    public void getProfile() {
+        try {
+            URL summonerProfile = new URL("https://" + server + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + summonerName + new ApiKey().getAPI_KEY());
+            BufferedReader in = new BufferedReader(new InputStreamReader(summonerProfile.openStream()));
+            String lolAPIJson = in.readLine();
+            in.close();
+            System.out.println(lolAPIJson);
 
-        this.summonerName = summonerName;
-        this.server = server;
-        this. summonerLevel = summonerLevel;
-        this.profileIconID = profileIconID;
-        this.puuID = puuID;
-        this.accountID = accountID;
-        this.id = id;
-    }
+            JSONObject lolAPI = new JSONObject(lolAPIJson);
 
-    public void getProfile() throws IOException {
-        URL summonerProfile = new URL("https://" + server + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + summonerName + new ApiKey().getAPI_KEY());
-        BufferedReader in = new BufferedReader(new InputStreamReader(summonerProfile.openStream()));
-        String lolAPIJson = in.readLine();
-        in.close();
-        System.out.println(lolAPIJson);
-
-        JSONObject lolAPI = new JSONObject(lolAPIJson);
-
-        summonerLevel = lolAPI.getInt("summonerLevel");
-        profileIconID = lolAPI.getInt("profileIconId");
-        puuID = lolAPI.getString("puuid");
-        accountID = lolAPI.getString("accountId");
-        id = lolAPI.getString("id");
+            summonerLevel = lolAPI.getInt("summonerLevel");
+            profileIconID = lolAPI.getInt("profileIconId");
+            puuID = lolAPI.getString("puuid");
+            accountID = lolAPI.getString("accountId");
+            id = lolAPI.getString("id");
+        } catch (Exception e) {
+            System.err.println(e + " no summoner with the input name found or the API-Key expired");
+        }
     }
 }
