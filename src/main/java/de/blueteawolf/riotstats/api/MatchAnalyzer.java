@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author BlueTeaWolf
@@ -28,7 +25,7 @@ public class MatchAnalyzer {
 
     private int[] items = new int[6];
 
-//    @ElementCollection
+    //    @ElementCollection
 //    @Size(max = 9)
     @Transient
     private HashMap<String, Integer> playersByPuuID = new HashMap<>();
@@ -71,6 +68,8 @@ public class MatchAnalyzer {
     private int totalHealsOnTeammates;
     private int trueDamageTaken;
     private int totalTimeSpentDead;
+    private long gameDuration;
+    private long gameCreation;
 
     public MatchAnalyzer() {
 
@@ -79,8 +78,8 @@ public class MatchAnalyzer {
     public void analyzeMatch(StringBuilder detailedMatchInformationJson, String playerPuuiD) {
 
         matchAnalyzeJson = detailedMatchInformationJson.toString();
-
         analyzeMatch(playerPuuiD);
+
     }
 
     private void analyzeMatch(String playerPuuID) {
@@ -107,6 +106,8 @@ public class MatchAnalyzer {
         JSONObject challenges = participant.getJSONObject("challenges");
 
         gameMode = info.getString("gameMode");
+        gameCreation = info.getLong("gameCreation");
+        gameDuration = info.getLong("gameDuration");
 
         championName = participant.getString("championName");
         role = Role.valueOf(participant.getString("individualPosition"));
@@ -149,53 +150,58 @@ public class MatchAnalyzer {
         enemyJungleMonsterKills = challenges.getInt("enemyJungleMonsterKills");
         dancedWithRiftHerald = challenges.getInt("dancedWithRiftHerald");
 
-//        System.out.println(this);
+        System.out.println(this);
 
+    }
+    public HashMap<String, Integer> getPlayersByPuuID() {
+        return playersByPuuID;
     }
 
     @Override
     public String toString() {
         return "MatchAnalyzer{" +
                 "matchAnalyzeJson='" + matchAnalyzeJson + '\'' +
-                ", matchID='" + matchID + '\'' +
-                ", role=" + role +
-                ", gameMode='" + gameMode + '\'' +
-                ", championName='" + championName + '\'' +
-                ", items=" + Arrays.toString(items) +
-                ", playersByPuuID=" + playersByPuuID +
-                ", quadraKills=" + quadraKills +
-                ", tripleKills=" + tripleKills +
-                ", assists=" + assists +
-                ", kda=" + kda +
-                ", killParticipation=" + killParticipation +
-                ", killingSprees=" + killingSprees +
-                ", acesBefore15Minutes=" + acesBefore15Minutes +
-                ", timeCCingOthers=" + timeCCingOthers +
-                ", totalDamageTaken=" + totalDamageTaken +
-                ", totalDamageDealt=" + totalDamageDealt +
-                ", totalHeal=" + totalHeal +
-                ", visionScore=" + visionScore +
-                ", visionScorePerMinute=" + visionScorePerMinute +
-                ", wardsKilled=" + wardsKilled +
-                ", wardsPlaced=" + wardsPlaced +
-                ", controlWardsPlaced=" + controlWardsPlaced +
-                ", win=" + win +
-                ", teamEarlySurrendered=" + teamEarlySurrendered +
-                ", turretsLost=" + turretsLost +
-                ", turretKills=" + turretKills +
-                ", baronKills=" + baronKills +
-                ", dragonKills=" + dragonKills +
-                ", earliestDragonTakedown=" + earliestDragonTakedown +
-                ", enemyJungleMonsterKills=" + enemyJungleMonsterKills +
-                ", dancedWithRiftHerald=" + dancedWithRiftHerald +
-                ", teamDamagePercentage=" + teamDamagePercentage +
-                ", objectivesStolen=" + objectivesStolen +
-                ", firstBloodKill=" + firstBloodKill +
-                ", firstTowerKill=" + firstTowerKill +
-                ", goldEarned=" + goldEarned +
-                ", totalHealsOnTeammates=" + totalHealsOnTeammates +
-                ", trueDamageTaken=" + trueDamageTaken +
-                ", totalTimeSpentDead=" + totalTimeSpentDead +
+                "\n matchID='" + matchID + '\'' +
+                "\n role=" + role +
+                "\n gameMode='" + gameMode + '\'' +
+                "\n championName='" + championName + '\'' +
+                "\n items=" + Arrays.toString(items) +
+                "\n playersByPuuID=" + playersByPuuID +
+                "\n quadraKills=" + quadraKills +
+                "\n tripleKills=" + tripleKills +
+                "\n assists=" + assists +
+                "\n kda=" + kda +
+                "\n killParticipation=" + killParticipation +
+                "\n killingSprees=" + killingSprees +
+                "\n acesBefore15Minutes=" + acesBefore15Minutes +
+                "\n timeCCingOthers=" + timeCCingOthers +
+                "\n totalDamageTaken=" + totalDamageTaken +
+                "\n totalDamageDealt=" + totalDamageDealt +
+                "\n totalHeal=" + totalHeal +
+                "\n visionScore=" + visionScore +
+                "\n visionScorePerMinute=" + visionScorePerMinute +
+                "\n wardsKilled=" + wardsKilled +
+                "\n wardsPlaced=" + wardsPlaced +
+                "\n controlWardsPlaced=" + controlWardsPlaced +
+                "\n win=" + win +
+                "\n teamEarlySurrendered=" + teamEarlySurrendered +
+                "\n turretsLost=" + turretsLost +
+                "\n turretKills=" + turretKills +
+                "\n baronKills=" + baronKills +
+                "\n dragonKills=" + dragonKills +
+                "\n earliestDragonTakedown=" + earliestDragonTakedown +
+                "\n enemyJungleMonsterKills=" + enemyJungleMonsterKills +
+                "\n dancedWithRiftHerald=" + dancedWithRiftHerald +
+                "\n teamDamagePercentage=" + teamDamagePercentage +
+                "\n objectivesStolen=" + objectivesStolen +
+                "\n firstBloodKill=" + firstBloodKill +
+                "\n firstTowerKill=" + firstTowerKill +
+                "\n goldEarned=" + goldEarned +
+                "\n totalHealsOnTeammates=" + totalHealsOnTeammates +
+                "\n trueDamageTaken=" + trueDamageTaken +
+                "\n totalTimeSpentDead=" + totalTimeSpentDead +
+                "\n gameDuration=" + gameDuration +
+                "\n gameCreation=" + gameCreation +
                 '}';
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.annotation.Id;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
@@ -43,8 +44,17 @@ public class Summoner {
 
     public void getProfile() {
         try {
-            URL summonerProfile = new URL("https://" + server + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/" + summonerName + new ApiKey().getAPI_KEY());
-            BufferedReader in = new BufferedReader(new InputStreamReader(summonerProfile.openStream()));
+            URL summonerProfile = new URL("https://"
+                    + server
+                    + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/"
+                    + summonerName
+                    + new ApiKey().getAPI_KEY());
+            HttpURLConnection connection = (HttpURLConnection) summonerProfile.openConnection();
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String lolAPIJson = in.readLine();
             in.close();
             System.out.println(lolAPIJson);
@@ -56,6 +66,8 @@ public class Summoner {
             puuID = lolAPI.getString("puuid");
             accountID = lolAPI.getString("accountId");
             id = lolAPI.getString("id");
+        } catch (java.net.SocketTimeoutException e) {
+            System.err.println("Riot-API down");
         } catch (Exception e) {
             System.err.println(e + " no summoner with the input name found or the API-Key expired");
         }

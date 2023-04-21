@@ -40,9 +40,9 @@ public class SummonerController {
             System.out.println("Summoner in database");
             System.out.println(summonerRepo.findBySummonerName(summonerInput.getSummonerName()));
         } else {
-            Summoner summoner = new Summoner(summonerInput.getSummonerName(), Region.EUW1);
-            summoner.getProfile();
-            summonerRepo.save(summoner);
+                Summoner summoner = new Summoner(summonerInput.getSummonerName(), Region.EUW1);
+                summoner.getProfile();
+                summonerRepo.save(summoner);
         }
 
         // Redirect to the second site with the desired URL structure
@@ -59,6 +59,28 @@ public class SummonerController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("summonerInformation");
         modelAndView.addObject("summoner", summoner);
+
+        try {
+            Match match = new Match(Region.EUROPE, summoner.getPuuID());
+            match.getMatches(10);
+            MatchAnalyzer matchAnalyzer = new MatchAnalyzer();
+            matchAnalyzer.analyzeMatch(match.getMatchDetails(0), summoner.getPuuID());
+            matchRepository.save(matchAnalyzer);
+
+//            not needed. Can be uncomment to save performance
+            for (String puuID : matchAnalyzer.getPlayersByPuuID().keySet()) {
+                if (!(puuID.equals(summoner.getPuuID()))) {
+                    MatchAnalyzer matchAnalysis = new MatchAnalyzer();
+                    matchAnalysis.analyzeMatch(match.getMatchDetails(0), puuID);
+                    matchRepository.save(matchAnalysis);
+                }
+            }
+
+
+        } catch (JSONException jsonException) {
+            System.out.println("Not more than 10 matches");
+        }
+
         return modelAndView;
     }
 }
