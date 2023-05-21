@@ -1,66 +1,69 @@
 package de.blueteawolf.riotstats.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author BlueTeaWolf
  */
 @Entity
 @Table
+@Getter
 public class MatchAnalyzer {
 
     @Transient
+    @JsonIgnore
     private String matchAnalyzeJson;
     @Id
+    private String key;
     private String matchID;
+    @Enumerated(EnumType.STRING)
     private Role role;
-
     private String gameMode;
     private String championName;
-
+    private String summonerName;
     private int[] items = new int[6];
-
-    //    @ElementCollection
-//    @Size(max = 9)
     @Transient
-    private HashMap<String, Integer> playersByPuuID = new HashMap<>();
-
+    @JsonIgnore
+    private HashMap<String, Integer> playersByPuuID = new HashMap();
+    private String puuID;
+    @ElementCollection
+    List<String> players = new ArrayList<>();
     private int quadraKills;
     private int tripleKills;
     private int assists;
     private double kda;
-    private double killParticipation;
+//    private double killParticipation;
     private int killingSprees;
     private int acesBefore15Minutes;
-
     private double timeCCingOthers;
     private int totalDamageTaken;
     private int totalDamageDealt;
     private int totalHeal;
-
     private int visionScore;
     private double visionScorePerMinute;
     private int wardsKilled;
     private int wardsPlaced;
     private int controlWardsPlaced;
-
     private boolean win;
     private boolean teamEarlySurrendered;
     private int turretsLost;
     private int turretKills;
-
     private int baronKills;
     private int dragonKills;
-    private double earliestDragonTakedown;
+//    private double earliestDragonTakedown;
     private int enemyJungleMonsterKills;
-
     private int dancedWithRiftHerald;
     private double teamDamagePercentage;
+    private int skillShotsDodged;
     private int objectivesStolen;
     private boolean firstBloodKill;
     private boolean firstTowerKill;
@@ -143,18 +146,23 @@ public class MatchAnalyzer {
         }
 
         kda = challenges.getDouble("kda");
-        killParticipation = challenges.getDouble("killParticipation");
+//        killParticipation = challenges.getDouble("killParticipation");
         visionScorePerMinute = challenges.getDouble("visionScorePerMinute");
         controlWardsPlaced = challenges.getInt("controlWardsPlaced");
-        earliestDragonTakedown = challenges.getDouble("earliestDragonTakedown");
+//        earliestDragonTakedown = challenges.getDouble("earliestDragonTakedown");
         enemyJungleMonsterKills = challenges.getInt("enemyJungleMonsterKills");
         dancedWithRiftHerald = challenges.getInt("dancedWithRiftHerald");
 
-        System.out.println(this);
+        this.players = this.playersByPuuID.keySet().stream().toList();
+        this.puuID = playerPuuID;
+        this.key = this.matchID + "_" + playerPuuID;
+        System.out.println("Made it till the end");
 
     }
-    public HashMap<String, Integer> getPlayersByPuuID() {
-        return playersByPuuID;
+
+    @JsonIgnore
+    public HashMap<String, Integer> getPlayersByPuuIDHashMap() {
+        return this.playersByPuuID;
     }
 
     @Override
@@ -171,7 +179,7 @@ public class MatchAnalyzer {
                 "\n tripleKills=" + tripleKills +
                 "\n assists=" + assists +
                 "\n kda=" + kda +
-                "\n killParticipation=" + killParticipation +
+//                "\n killParticipation=" + killParticipation +
                 "\n killingSprees=" + killingSprees +
                 "\n acesBefore15Minutes=" + acesBefore15Minutes +
                 "\n timeCCingOthers=" + timeCCingOthers +
@@ -189,7 +197,7 @@ public class MatchAnalyzer {
                 "\n turretKills=" + turretKills +
                 "\n baronKills=" + baronKills +
                 "\n dragonKills=" + dragonKills +
-                "\n earliestDragonTakedown=" + earliestDragonTakedown +
+//                "\n earliestDragonTakedown=" + earliestDragonTakedown +
                 "\n enemyJungleMonsterKills=" + enemyJungleMonsterKills +
                 "\n dancedWithRiftHerald=" + dancedWithRiftHerald +
                 "\n teamDamagePercentage=" + teamDamagePercentage +
