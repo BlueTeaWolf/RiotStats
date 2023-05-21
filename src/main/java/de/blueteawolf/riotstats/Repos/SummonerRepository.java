@@ -1,4 +1,4 @@
-package de.blueteawolf.riotstats.summoner;
+package de.blueteawolf.riotstats.Repos;
 
 
 import de.blueteawolf.riotstats.api.Summoner;
