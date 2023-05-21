@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RiotStats</title>
+    <title>SummonerInformation</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light test">
-    <a class="navbar-brand" href="/"><img src="../static/images/logo.png" alt="Logo" height="30" th:src="@{/images/logo.png}"> RiotStats</a>
+    <a class="navbar-brand" href="/"><img src="../static/images/logo.png" alt="Logo" height="30"
+                                          th:src="@{/images/logo.png}"> RiotStats</a>
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -28,44 +30,268 @@
             </ul>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script src="/script/script.js"></script>
 </nav>
 
-<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
-<script src="/script/script.js"></script>
+<div class="jumbotron">
+    <div class="pleaseFunction">
+        <p id="margin-top"></p>
+    </div>
+</div>
 
-<!--<div class="jumbotron">-->
-<!--    <div class="container">-->
-<!--        <p id="text"></p>-->
-<!--    </div>-->
-<!--</div>-->
+<div class="row" th:action="@{/summonerInformation}">
+    <div class="col-md-4">
+        <img class="summonerPicture" id="summonerProfilePicture"/>
 
-<form th:action="@{/summonerInformation}" method="get">
-    <table>
-        <tr>
-            <td><h4>Summoner name:</h4></td>
-            <td><h4 th:text="${summoner.summonerName}"></h4></td>
-        </tr>
-        <tr>
-            <td><h4>Account ID:</h4></td>
-            <td><h4 th:text="${summoner.accountID}"></h4></td>
-        </tr>
-        <tr>
-            <td><h4>ID:</h4></td>
-            <td><h4 th:text="${summoner.id}"></h4></td>
-        </tr>
-        <tr>
-            <td><h4>PUUID:</h4></td>
-            <td><h4 th:text="${summoner.puuID}"></h4></td>
-        </tr>
-        <tr>
-            <td><h4>Server:</h4></td>
-            <td><h4 th:text="${summoner.server}"></h4></td>
-        </tr>
-        <tr>
-            <td><h4>Summoner level:</h4></td>
-            <td><h4 th:text="${summoner.summonerLevel}"></h4></td>
-        </tr>
-    </table>
-</form>
+        <form>
+            <h3>Name: <span th:text="${summoner.summonerName}"></span></h3>
+
+            <h3 th:if="${summoner.soloRank != null && summoner.soloDivision != null}">Rank-Solo:
+                <span th:text="${summoner.soloRank}"></span>
+                <span th:text="${summoner.soloDivision}"></span>
+            </h3>
+
+
+            <h3 th:if="${summoner.flexRank != null && summoner.flexDivision != null}">Rank-Flex:
+                <span th:text="${summoner.flexRank}"></span>
+                <span th:text="${summoner.flexDivision}"></span>
+            </h3>
+
+            <h3>Level: <span th:text="${summoner.summonerLevel}"></span></h3>
+        </form>
+
+        <button type="button" class="btn btn-success">
+            Refresh
+        </button>
+        <p>
+            <a class="btn" href="#">View details »</a>
+        </p>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Win Percentages</h2>
+        <div class="chartWins">
+            <canvas id="winChart"></canvas>
+        </div>
+
+        <script th:inline="javascript">
+            const profileIconID = /*[[${summoner.profileIconID}]]*/ '';
+            const profileIconUrl = "https://ddragon.leagueoflegends.com/cdn/13.6.1/img/profileicon/" + profileIconID + ".png";
+            document.getElementById("summonerProfilePicture").src = profileIconUrl;
+
+            const summonerPuuID = /*[[${summoner.puuID}]]*/ '';
+            const url = 'http://localhost:8080/api/matchAnalyze/wins?summonerPuuID=' + summonerPuuID;
+
+            let winCount = 0;
+            let lostCount = 0;
+
+            async function fetchData() {
+                const response = await fetch(url);
+                const booleans = await response.json();
+
+                booleans.forEach(function (bool) {
+                    if (bool) {
+                        winCount++;
+                    } else {
+                        lostCount++;
+                    }
+                });
+
+                const winsInputData = {
+                    labels: ['Wins', 'Losses'],
+                    datasets: [{
+                        data: [winCount, lostCount],
+                        backgroundColor: [
+                            '#425df5',
+                            '#f55742'
+                        ],
+                        hoverBackgroundColor: [
+                            '#312edb',
+                            '#ed3a24'
+                        ]
+                    }]
+                };
+
+                const options = {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Win Percentage'
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                };
+
+                const canvas = document.getElementById('winChart').getContext('2d');
+
+                const chart = new Chart(canvas, {
+                    type: 'doughnut',
+                    data: winsInputData,
+                    options: options
+                });
+            }
+
+            fetchData();
+
+        </script>
+
+        <p>
+            <a class="btn" href="#">View details »</a>
+        </p>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Role</h2>
+        <div class="chartChampionPool">
+            <canvas id="playedRoles"></canvas>
+        </div>
+
+        <p>
+            <script>
+                const rolesUrl = 'http://localhost:8080/api/roles?summonerPuuID=' + summonerPuuID;
+
+                async function fetchData() {
+                    const response = await fetch(rolesUrl);
+                    const roles = await response.json();
+
+                    const roleCount = {};
+
+                    roles.forEach(function (role) {
+                        if (roleCount.hasOwnProperty(role)) {
+                            roleCount[role]++;
+                        } else {
+                            roleCount[role] = 1;
+                        }
+                    });
+
+                    const data = {
+                        labels: Object.keys(roleCount),
+                        datasets: [
+                            {
+                                label: "Roles",
+                                data: Object.values(roleCount),
+                                backgroundColor: [
+                                    "rgba(255, 99, 132, 0.7)",
+                                    "rgba(54, 162, 235, 0.7)",
+                                    "rgba(255, 206, 86, 0.7)",
+                                    "rgba(75, 192, 192, 0.7)",
+                                    "rgba(120, 567, 234, 0.7)"
+                                ],
+                                borderWidth: 1
+                            }
+                        ]
+                    };
+
+                    const config = {
+                        type: "polarArea",
+                        data: data,
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: "Roles Played"
+                                }
+                            }
+                        }
+                    };
+
+                    const myChart = new Chart(document.getElementById("playedRoles"), config);
+                }
+
+                fetchData();
+            </script>
+        </p>
+
+        <p>
+            <a class="btn" href="#">View details »</a>
+        </p>
+    </div>
+</div>
+
+<div class="col-md-6">
+    <canvas id="boxChart"></canvas>
+</div>
+
+<p>
+    <script>
+        const championData = {};
+
+        const apiUrl = 'http://localhost:8080/api/getChampionPool?summonerPuuID=' + summonerPuuID;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(jsonData => {
+                if (Array.isArray(jsonData)) {
+                    jsonData.forEach(function (champion) {
+                        updateChampionData(champion);
+                    });
+                } else if (typeof jsonData === 'object') {
+                    Object.entries(jsonData).forEach(function ([champion, data]) {
+                        updateChampionData(champion, data);
+                    });
+                }
+
+                const chartData = Object.keys(championData).map(function (champion) {
+                    return {
+                        label: champion,
+                        data: championData[champion].played,
+                        wins: championData[champion].wins
+                    };
+                });
+
+                const ctx = document.getElementById('boxChart').getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        datasets: [{
+                            label: 'Champion Occurrences',
+                            data: chartData.map(item => item.data),
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                        }, {
+                            label: 'Wins',
+                            data: chartData.map(item => item.wins),
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'category',
+                                labels: chartData.map(item => item.label), // Use 'labels' instead of 'x'
+                                offset: true,
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Occurrences'
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching JSON data:', error);
+            });
+
+        function updateChampionData(champion, data = {wins: 0, played: 0}) {
+            if (championData[champion]) {
+                championData[champion].played += data.played;
+                championData[champion].wins += data.wins;
+            } else {
+                championData[champion] = {
+                    played: data.played,
+                    wins: data.wins
+                };
+            }
+        }
+    </script>
+</p>
+
 </body>
 </html>

@@ -5,14 +5,11 @@ body {
 .jumbotron {
     background-color: #f8f9fa;
     border-radius: 0;
-    /*border-top: 3px solid #007bff;*/
-    /*height: 200px;*/
     display: flex;
     justify-content: center;
-    /*align-items: center;*/
     margin-bottom: 0;
     height: auto;
-    padding: 0rem;
+    padding: 0;
     align-items: flex-end;
 }
 
@@ -22,7 +19,13 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 50vh;
+    min-height: 15vh;
+    min-width: 15vh;
+}
+
+.row {
+    margin-left: 15vh;
+    margin-right: 15vh;
 }
 
 .navbar-brand {
@@ -102,3 +105,33 @@ body {
     border-bottom: 3px solid #007bff;
 }
 
+.summonerPicture {
+    width: 200px;
+}
+
+.chartWins {
+    width: 420px;
+}
+
+.chartChampionPool {
+    width: 500px;
+}
+
+.containerTwo {
+    display: flex;
+    flex: 2 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 15vh;
+    min-width: 15vh;
+}
+
+.container {
+    display: flex;
+    flex: 2 1 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}
