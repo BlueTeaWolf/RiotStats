@@ -1,6 +1,9 @@
 package de.blueteawolf.riotstats.api;
 
 import de.blueteawolf.riotstats.ApiKey;
+import jakarta.persistence.Transient;
+import lombok.Getter;
+import org.json.JSONArray;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,41 +14,47 @@ import java.util.HashMap;
 /**
  * @author BlueTeaWolf
  */
+@Getter
 public class Match {
+
+    @Transient
     private HashMap<Integer, String> matches = new HashMap<>();
-    private HashMap<Integer, String> matcheDetails = new HashMap<>();
-    private StringBuilder matchLogJson;
-    private StringBuilder detailedMatchInformation;
+    @Transient
+    private HashMap<Integer, String> matchDetails = new HashMap<>();
+    @Transient
     private Region region;
-    private final String puuID;
+    @Transient
+    private String puuID;
 
     public Match(Region region, String puuID) {
         this.region = region;
-        if(region == null) {
+        if (region == null) {
             this.region = Region.EUROPE;
         }
         this.puuID = puuID;
     }
 
-    public String getMatches(int matches) throws IOException {
-        if (matches > 100 || matches < 1) {
-            return null;
+    public Match() {
+
+    }
+
+    public void retrieveMatches(int matchCount) throws IOException {
+        if (matchCount > 100 || matchCount < 1) {
+            return;
         }
         URL matchSite = new URL("https://"
                 + region
                 + ".api.riotgames.com/lol/match/v5/matches/by-puuid/"
                 + puuID
-                + "/ids?start=0&count=" + matches + new ApiKey().getMATCH_API_KEY());
+                + "/ids?start=0&count=" + matchCount + new ApiKey().getMATCH_API_KEY());
         BufferedReader in = new BufferedReader(new InputStreamReader(matchSite.openStream()));
-        matchLogJson = new StringBuilder(in.readLine());
-        in.close();
+        JSONArray matches = new JSONArray(in.readLine());
+        System.out.println(matchSite);
 
-        for (int i = 1; i <= matches; i++) {
-            int lengthOfCode = matchLogJson.indexOf("E");
-            this.matches.put(i, matchLogJson.substring(lengthOfCode, lengthOfCode + 15));
-            matchLogJson.deleteCharAt(lengthOfCode);
+        for (int i = 0; i < matchCount; i++) {
+            this.matches.put(i,matches.getString(i));
         }
-        return matchLogJson.toString();
+
     }
 
     public StringBuilder getMatchDetails(int matchNumber) throws IOException {
@@ -58,11 +67,17 @@ public class Match {
                 + matches.get(matchNumber)
                 + new ApiKey()
                 .getAPI_KEY());
+
         BufferedReader in = new BufferedReader(new InputStreamReader(matchDetailsUrl.openStream()));
-        detailedMatchInformation = new StringBuilder(in.readLine());
+        StringBuilder detailedMatchInformation = new StringBuilder(in.readLine());
         in.close();
-        matcheDetails.put(matchNumber, String.valueOf(detailedMatchInformation));
+
+        matchDetails.put(matchNumber, String.valueOf(detailedMatchInformation));
         return detailedMatchInformation;
+    }
+
+    public String getMatchAt(int position) {
+        return matches.get(position);
     }
 
 }
