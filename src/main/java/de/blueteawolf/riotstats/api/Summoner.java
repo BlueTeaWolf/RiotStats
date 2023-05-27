@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
@@ -60,11 +62,11 @@ public class Summoner {
 
     private void getProfile() {
         try {
-            URL summonerProfile = new URL("https://"
+            URL summonerProfile = new URI("https://"
                     + server
                     + ".api.riotgames.com/lol/summoner/v4/summoners/by-name/"
                     + summonerName
-                    + new ApiKey().getAPI_KEY());
+                    + new ApiKey().getAPI_KEY()).toURL();
             HttpURLConnection connection = (HttpURLConnection) summonerProfile.openConnection();
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
@@ -119,12 +121,12 @@ public class Summoner {
         lastUpdate = new Date();
     }
 
-    private JSONArray getEncryptedSummoner() throws IOException {
-        URL encryptedSummoner = new URL("https://"
+    private JSONArray getEncryptedSummoner() throws IOException, URISyntaxException {
+        URL encryptedSummoner = new URI("https://"
                 + server
                 + ".api.riotgames.com/lol/league/v4/entries/by-summoner/"
                 + id
-                + new ApiKey().getAPI_KEY());
+                + new ApiKey().getAPI_KEY()).toURL();
         BufferedReader in = new BufferedReader(new InputStreamReader(encryptedSummoner.openStream()));
         String encryptedSummonerBuilder = in.readLine();
         in.close();
