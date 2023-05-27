@@ -1,7 +1,10 @@
 package de.blueteawolf.riotstats.api;
 
 import de.blueteawolf.riotstats.ApiKey;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 
 /**
  * @author BlueTeaWolf
@@ -45,20 +47,18 @@ public class Summoner {
     private int flexLosses;
     private int soloWins;
     private int soloLosses;
-    private Date lastUpdate;
 
 
     public Summoner(String summonerName, Region server) {
         this.summonerName = summonerName;
         this.server = server;
-        getProfile();
     }
 
     public Summoner() {
 
     }
 
-    private void getProfile() {
+    public void getProfile() {
         try {
             URL summonerProfile = new URL("https://"
                     + server
@@ -73,6 +73,7 @@ public class Summoner {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String lolAPIJson = in.readLine();
             in.close();
+            System.out.println(lolAPIJson);
 
             JSONObject lolAPI = new JSONObject(lolAPIJson);
 
@@ -116,7 +117,6 @@ public class Summoner {
         } catch (Exception e) {
             System.err.println(e + " no summoner with the input name found or the API-Key expired");
         }
-        lastUpdate = new Date();
     }
 
     private JSONArray getEncryptedSummoner() throws IOException {
@@ -126,13 +126,11 @@ public class Summoner {
                 + id
                 + new ApiKey().getAPI_KEY());
         BufferedReader in = new BufferedReader(new InputStreamReader(encryptedSummoner.openStream()));
-        String encryptedSummonerBuilder = in.readLine();
+        StringBuilder encryptedSummonerBuilder = new StringBuilder(in.readLine());
         in.close();
-        return new JSONArray(encryptedSummonerBuilder);
-    }
-
-    public boolean lastUpdate() {
-        return (System.currentTimeMillis() - lastUpdate.getTime()) > 120000;
+        System.out.println(encryptedSummonerBuilder + "-----");
+        String test = encryptedSummonerBuilder.toString();
+        return new JSONArray(test);
     }
 
 }

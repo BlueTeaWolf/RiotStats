@@ -35,7 +35,7 @@
 </nav>
 
 <div class="jumbotron">
-    <div class="summonerBlockDistance">
+    <div class="pleaseFunction">
         <p id="margin-top"></p>
     </div>
 </div>
@@ -61,28 +61,9 @@
             <h3>Level: <span th:text="${summoner.summonerLevel}"></span></h3>
         </form>
 
-        <button type="button" class="btn btn-success" id="refreshSummoner">
+        <button type="button" class="btn btn-success">
             Refresh
         </button>
-
-        <script>
-            const refreshButton = document.getElementById('refreshSummoner');
-            const summonerName = /*[[${summoner.summonerName}]]*/ '';
-            const server = /*[[${summoner.server}]]*/ '';
-
-            refreshButton.addEventListener('click', function() {
-                const refreshSummoner = 'http://localhost:8080/updateSummoner?summonerName=' + summonerName + '&server=' + server;
-                fetch(refreshSummoner, { method: 'PATCH' })
-                    .then(response => {
-                        console.log('Request succeeded:', response);
-                        location.reload();
-                    })
-                    .catch(error => {
-                        console.error('Request failed:', error);
-                    });
-            });
-        </script>
-
         <p>
             <a class="btn" href="#">View details »</a>
         </p>
@@ -255,8 +236,7 @@
                 const chartData = Object.keys(championData).map(function (champion) {
                     return {
                         label: champion,
-                        occurrences: championData[champion].played,
-                        averageKDA: championData[champion].averageKDA,
+                        data: championData[champion].played,
                         wins: championData[champion].wins
                     };
                 });
@@ -266,43 +246,29 @@
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: chartData.map(item => item.label),
-                        datasets: [
-                            {
-                                label: 'Champion Occurrences',
-                                data: chartData.map(item => item.occurrences),
-                                backgroundColor: 'rgba(75, 192, 192, 0.5)'
-                            },
-                            {
-                                label: 'Average KDA',
-                                data: chartData.map(item => item.averageKDA),
-                                type: 'line',
-                                borderColor: 'rgba(255, 206, 86, 0.7)',
-                                borderWidth: 2,
-                                fill: false
-                            },
-                            {
-                                label: 'Wins',
-                                data: chartData.map(item => item.wins),
-                                backgroundColor: 'rgba(255, 99, 132, 0.5)'
-                            }
-                        ]
+                        datasets: [{
+                            label: 'Champion Occurrences',
+                            data: chartData.map(item => item.data),
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                        }, {
+                            label: 'Wins',
+                            data: chartData.map(item => item.wins),
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                        }]
                     },
                     options: {
                         responsive: true,
                         scales: {
                             x: {
                                 type: 'category',
-                                title: {
-                                    display: true,
-                                    text: 'Champions'
-                                }
+                                labels: chartData.map(item => item.label), // Use 'labels' instead of 'x'
+                                offset: true,
                             },
                             y: {
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Occurrences / Average KDA / Wins'
+                                    text: 'Occurrences'
                                 }
                             }
                         }
@@ -313,20 +279,19 @@
                 console.error('Error fetching JSON data:', error);
             });
 
-        function updateChampionData(champion, data = { wins: 0, averageKDA: 0, played: 0 }) {
+        function updateChampionData(champion, data = {wins: 0, played: 0}) {
             if (championData[champion]) {
                 championData[champion].played += data.played;
                 championData[champion].wins += data.wins;
-                championData[champion].averageKDA += data.averageKDA;
             } else {
                 championData[champion] = {
                     played: data.played,
-                    wins: data.wins,
-                    averageKDA: data.averageKDA
+                    wins: data.wins
                 };
             }
         }
     </script>
 </p>
+
 </body>
 </html>

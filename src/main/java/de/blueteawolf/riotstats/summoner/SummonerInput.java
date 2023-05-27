@@ -1,4 +1,4 @@
-package de.blueteawolf.riotstats.controller;
+package de.blueteawolf.riotstats.summoner;
 
 import de.blueteawolf.riotstats.api.Region;
 import lombok.AllArgsConstructor;

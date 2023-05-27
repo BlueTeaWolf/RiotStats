@@ -53,16 +53,13 @@ public class MatchAPIController {
         List<MatchAnalyzer> matches = matchAnalyzeRepository.findByPuuID(summonerPuuID);
         Map<String, Integer> championWins = new HashMap<>();
         Map<String, Integer> championPlays = new HashMap<>();
-        Map<String, Double> championKDAs = new HashMap<>();
 
         for (MatchAnalyzer matchAnalyzer : matches) {
             String championName = matchAnalyzer.getChampionName();
             boolean isWin = matchAnalyzer.isWin();
-            double kda = matchAnalyzer.getKda();
 
             championWins.put(championName, championWins.getOrDefault(championName, 0) + (isWin ? 1 : 0));
             championPlays.put(championName, championPlays.getOrDefault(championName, 0) + 1);
-            championKDAs.put(championName, championKDAs.getOrDefault(championName, 0.0) + kda);
         }
 
         JSONObject championData = new JSONObject();
@@ -70,13 +67,10 @@ public class MatchAPIController {
         for (String championName : championWins.keySet()) {
             int wins = championWins.get(championName);
             int plays = championPlays.get(championName);
-            double kdaTotal = championKDAs.get(championName);
-            double averageKDA = kdaTotal / plays;
 
             JSONObject championInfo = new JSONObject();
             championInfo.put("wins", wins);
             championInfo.put("played", plays);
-            championInfo.put("averageKDA", averageKDA);
 
             championData.put(championName, championInfo);
         }

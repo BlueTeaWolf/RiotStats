@@ -2,12 +2,11 @@ package de.blueteawolf.riotstats.controller;
 
 import de.blueteawolf.riotstats.api.Region;
 import de.blueteawolf.riotstats.api.Summoner;
+import de.blueteawolf.riotstats.summoner.SummonerInput;
 import de.blueteawolf.riotstats.Repos.SummonerRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,6 +39,7 @@ public class SummonerController {
             System.out.println(summonerRepo.findBySummonerName(summonerInput.getSummonerName()));
         } else {
             Summoner summoner = new Summoner(summonerInput.getSummonerName(), Region.EUW1);
+            summoner.getProfile();
             summonerRepo.save(summoner);
         }
 
@@ -60,26 +60,6 @@ public class SummonerController {
         modelAndView.setViewName("summonerInformation");
         modelAndView.addObject("summoner", summoner);
         return modelAndView;
-    }
-
-    @PatchMapping("/updateSummoner")
-    public ResponseEntity.BodyBuilder updateSummoner(@RequestParam String summonerName, String server) {
-
-        Optional<Summoner> check = summonerRepo.findBySummonerName(summonerName);
-
-        if(check.isPresent()) {
-            if(check.get().lastUpdate()) {
-                System.out.println("updating summoner...");
-                Summoner summoner = new Summoner(summonerName, Region.valueOf(server));
-                summonerRepo.save(summoner);
-                System.out.println("updated Summoner");
-                return ResponseEntity.status(HttpStatus.OK);
-            } else {
-                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS);
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST);
-        }
     }
 //    @Async
 //    @RequestMapping("/summonerName/{summonerName}")
