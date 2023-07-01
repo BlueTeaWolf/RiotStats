@@ -6,10 +6,7 @@ import lombok.Getter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author BlueTeaWolf
@@ -33,7 +30,7 @@ public class MatchAnalyzer {
     private int[] items = new int[6];
     @Transient
     @JsonIgnore
-    private HashMap<String, Integer> playersByPuuID = new HashMap();
+    private HashMap<String, Integer> playersByPuuID = new HashMap<>();
     private String puuID;
     @ElementCollection
     List<String> players = new ArrayList<>();

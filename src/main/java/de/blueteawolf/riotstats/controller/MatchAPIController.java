@@ -3,6 +3,7 @@ package de.blueteawolf.riotstats.controller;
 import de.blueteawolf.riotstats.Repos.MatchAnalyzeRepository;
 import de.blueteawolf.riotstats.api.MatchAnalyzer;
 import de.blueteawolf.riotstats.api.Role;
+import de.blueteawolf.riotstats.api.builds.Build;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
@@ -127,6 +128,89 @@ public class MatchAPIController {
                 .stream()
                 .map(MatchAnalyzer::getRole)
                 .toList();
+    }
+
+    @GetMapping("/api/builds")
+    @ResponseBody
+    public String getBuilds(@RequestParam String puuID) {
+        List<MatchAnalyzer> matchesList = matchAnalyzeRepository.findByPuuID(puuID);
+        Map<String, List<Build>> championBuilds = new HashMap<>();
+
+        for (MatchAnalyzer match : matchesList) {
+
+            if (!championBuilds.containsKey(match.getChampionName())) {
+                championBuilds.put(match.getChampionName(), new ArrayList<>());
+            }
+
+            Build build = new Build(match.getChampionName(), match.getItems());
+            championBuilds.get(match.getChampionName()).add(build);
+
+            if (match.isWin()) {
+                build.addWins(1);
+            } else {
+                build.addLosses(1);
+            }
+
+        }
+
+        for (String champion : championBuilds.keySet()) {
+            List<Build> builds = championBuilds.get(champion);
+            int buildsSize = builds.size();
+
+            for (int i = buildsSize - 1; i >= 0; i--) {
+                Build currentBuild = builds.get(i);
+                for (int j = buildsSize - 1; j >= 0; j--) {
+                    if (i == j) {
+                        continue;
+                    }
+
+                    int[] items = builds.get(j).getBuild();
+
+                    if (isSubset(currentBuild.getBuild(), items)) {
+                        currentBuild.addWins(builds.get(j).getWins());
+                        currentBuild.addLosses(builds.get(j).getLosses());
+                        builds.remove(j);
+                        buildsSize--;
+                        System.out.println("FOUND A SUBSET");
+                    }
+                }
+            }
+        }
+
+        for (String champion : championBuilds.keySet()) {
+            System.out.println("CHAMP: " + champion);
+
+            for (Build build : championBuilds.get(champion)) {
+                System.out.println("BUILD: " + Arrays.toString(build.getBuild()));
+                System.out.println("WINS: " + build.getWins());
+                System.out.println("LOSSES: " + build.getLosses());
+            }
+        }
+
+        return championBuilds.toString();
+    }
+
+
+    private boolean isSubset(int[] array1, int[] array2) {
+        HashSet<Integer> set = new HashSet<>();
+
+        if (array1.length >= array2.length) {
+            for (int num : array1) {
+                set.add(num);
+            }
+        } else {
+            for (int num : array2) {
+                set.add(num);
+            }
+        }
+
+        for (int num : array2) {
+            if (!set.contains(num)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }

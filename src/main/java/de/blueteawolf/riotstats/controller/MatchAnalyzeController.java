@@ -32,7 +32,7 @@ public class MatchAnalyzeController {
         this.summoner = summoner;
         try {
             match = new Match(Region.EUROPE, summoner.getPuuID());
-            int matchCount = 10;
+            int matchCount = 20;
             match.retrieveMatches(matchCount);
             System.out.println("RETRIEVING MATCHES");
             for (int i = 0; i < matchCount; i++) {
