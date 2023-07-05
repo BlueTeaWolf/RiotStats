@@ -177,17 +177,6 @@ public class MatchAPIController {
             }
         }
 
-        for (String champion : championBuilds.keySet()) {
-            System.out.println("CHAMP: " + champion);
-
-            for (Build build : championBuilds.get(champion)) {
-                System.out.println("BUILD: " + Arrays.toString(build.getBuild()));
-                System.out.println("WINS: " + build.getWins());
-                System.out.println("LOSSES: " + build.getLosses());
-            }
-        }
-        System.out.println("-----------");
-
         JSONObject championBuildData = new JSONObject();
 
         for (String champion : championBuilds.keySet()) {
@@ -202,7 +191,6 @@ public class MatchAPIController {
             championBuildData.put(champion, buildsArray);
 
         }
-        System.out.println(championBuildData.toString());
         return championBuildData.toString();
     }
 
