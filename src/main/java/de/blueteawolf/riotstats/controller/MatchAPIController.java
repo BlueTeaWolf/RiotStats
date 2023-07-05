@@ -143,7 +143,7 @@ public class MatchAPIController {
                 championBuilds.put(match.getChampionName(), new ArrayList<>());
             }
 
-            Build build = new Build(match.getChampionName(), match.getItems());
+            Build build = new Build(match.getChampionName(), match.getItems(), match.getKda());
             championBuilds.get(match.getChampionName()).add(build);
 
             if (match.isWin()) {
@@ -170,6 +170,7 @@ public class MatchAPIController {
                     if (isSubset(currentBuild.getBuild(), items)) {
                         currentBuild.addWins(builds.get(j).getWins());
                         currentBuild.addLosses(builds.get(j).getLosses());
+                        currentBuild.addKda(builds.get(j).getKda());
                         builds.remove(j);
                         buildsSize--;
                     }
@@ -186,6 +187,7 @@ public class MatchAPIController {
                 championBuildInfo.put("BUILD", build.getBuild());
                 championBuildInfo.put("WINS", build.getWins());
                 championBuildInfo.put("LOSSES", build.getLosses());
+                championBuildInfo.put("KDA", build.getKda());
                 buildsArray.put(championBuildInfo);
             }
             championBuildData.put(champion, buildsArray);

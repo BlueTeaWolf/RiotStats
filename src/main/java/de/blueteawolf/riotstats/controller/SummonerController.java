@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 /**
@@ -31,12 +33,11 @@ public class SummonerController {
 
     @RequestMapping(value = "/summoner", method = RequestMethod.POST)
     public ModelAndView save(@ModelAttribute SummonerInput summonerInput, HttpServletResponse response, HttpServletRequest request) throws Exception {
-        System.out.println("User from IP= " + request.getLocalAddr());
+//        System.out.println("User from IP= " + request.getLocalAddr());
         //TODO use com.maxmind.geoip2 to get continent of user for Region. Is now automatically EUW1
-        System.out.println("User from UI= " + summonerInput);
+//        System.out.println("User from UI= " + summonerInput);
 
         if (summonerRepo.findBySummonerName(summonerInput.getSummonerName()).isPresent()) {
-            System.out.println("Summoner in database");
             System.out.println(summonerRepo.findBySummonerName(summonerInput.getSummonerName()));
         } else {
             Summoner summoner = new Summoner(summonerInput.getSummonerName(), Region.EUW1);
@@ -51,6 +52,7 @@ public class SummonerController {
 
     @RequestMapping("/summonerName/{summonerName}")
     public ModelAndView summonerInformation(@PathVariable String summonerName) {
+        String decodedSummonerName = new String(summonerName.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
         Optional<Summoner> optionalSummoner = summonerRepo.findBySummonerName(summonerName);
         Summoner summoner = optionalSummoner.orElseThrow(() -> new IllegalArgumentException("Invalid summoner name: " + summonerName));
 
@@ -69,10 +71,8 @@ public class SummonerController {
 
         if(check.isPresent()) {
             if(check.get().lastUpdate()) {
-                System.out.println("updating summoner...");
                 Summoner summoner = new Summoner(summonerName, Region.valueOf(server));
                 summonerRepo.save(summoner);
-                System.out.println("updated Summoner");
                 return ResponseEntity.status(HttpStatus.OK);
             } else {
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS);

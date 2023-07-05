@@ -142,7 +142,7 @@ public class MatchAnalyzer {
             items[i] = participant.getInt("item" + i);
         }
 
-        kda = challenges.getDouble("kda");
+        kda = Math.round(challenges.getDouble("kda") * 100.0) / 100.0;
 //        killParticipation = challenges.getDouble("killParticipation");
         visionScorePerMinute = challenges.getDouble("visionScorePerMinute");
         controlWardsPlaced = challenges.getInt("controlWardsPlaced");
