@@ -70,9 +70,9 @@
             const summonerName = /*[[${summoner.summonerName}]]*/ '';
             const server = /*[[${summoner.server}]]*/ '';
 
-            refreshButton.addEventListener('click', function() {
+            refreshButton.addEventListener('click', function () {
                 const refreshSummoner = 'http://localhost:8080/updateSummoner?summonerName=' + summonerName + '&server=' + server;
-                fetch(refreshSummoner, { method: 'PATCH' })
+                fetch(refreshSummoner, {method: 'PATCH'})
                     .then(response => {
                         console.log('Request succeeded:', response);
                         location.reload();
@@ -83,9 +83,9 @@
             });
         </script>
 
-        <p>
-            <a class="btn" href="#">View details »</a>
-        </p>
+        <!--        <p>-->
+        <!--            <a class="btn" href="#">View details »</a>-->
+        <!--        </p>-->
     </div>
 
     <div class="col-md-4">
@@ -156,9 +156,9 @@
 
         </script>
 
-        <p>
-            <a class="btn" href="#">View details »</a>
-        </p>
+        <!--        <p>-->
+        <!--            <a class="btn" href="#">View details »</a>-->
+        <!--        </p>-->
     </div>
 
     <div class="col-md-4">
@@ -223,9 +223,9 @@
             </script>
         </p>
 
-        <p>
-            <a class="btn" href="#">View details »</a>
-        </p>
+        <!--        <p>-->
+        <!--            <a class="btn" href="#">View details »</a>-->
+        <!--        </p>-->
     </div>
 </div>
 
@@ -313,7 +313,7 @@
                 console.error('Error fetching JSON data:', error);
             });
 
-        function updateChampionData(champion, data = { wins: 0, averageKDA: 0, played: 0 }) {
+        function updateChampionData(champion, data = {wins: 0, averageKDA: 0, played: 0}) {
             if (championData[champion]) {
                 championData[champion].played += data.played;
                 championData[champion].wins += data.wins;
@@ -328,5 +328,85 @@
         }
     </script>
 </p>
+
+
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Champion</th>
+            <th>Icon</th>
+            <th>Wins</th>
+            <th>Losses</th>
+            <th>Build</th>
+            <th>Kda</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const buildsURL = 'http://localhost:8080/api/builds?summonerPuuID=' + summonerPuuID;
+
+    const tableBody = document.getElementById("tableBody");
+
+    fetch(buildsURL)
+        .then(response => response.text())
+        .then(jsonString => {
+            const jsonData = JSON.parse(jsonString);
+
+            for (const champion in jsonData) {
+                const championData = jsonData[champion];
+
+                for (let i = 0; i < championData.length; i++) {
+                    const row = document.createElement("tr");
+
+                    const championCell = document.createElement("td");
+                    championCell.textContent = champion;
+                    row.appendChild(championCell);
+
+                    const imageCell = document.createElement("td");
+                    const championImage = document.createElement("img");
+                    championImage.src = "http://ddragon.leagueoflegends.com/cdn/13.13.1/img/champion/" + champion + ".png";
+                    championImage.alt = champion;
+                    imageCell.appendChild(championImage);
+                    row.appendChild(imageCell);
+
+                    const winsCell = document.createElement("td");
+                    winsCell.textContent = championData[i].WINS;
+                    row.appendChild(winsCell);
+
+                    const lossesCell = document.createElement("td");
+                    lossesCell.textContent = championData[i].LOSSES;
+                    row.appendChild(lossesCell);
+
+                    const buildCell = document.createElement("td");
+                    for (let j = 0; j < championData[i].BUILD.length; j++) {
+                        if (championData[i].BUILD[j] === 0) {
+                            continue;
+                        }
+                        const itemImage = document.createElement("img");
+                        itemImage.src = "http://ddragon.leagueoflegends.com/cdn/13.13.1/img/item/" + championData[i].BUILD[j] + ".png";
+                        itemImage.alt = "Item " + championData[i].BUILD[j];
+                        buildCell.appendChild(itemImage);
+                    }
+
+                    row.appendChild(buildCell);
+
+                    const kdaCell = document.createElement("td");
+                    kdaCell.textContent = championData[i].KDA;
+                    row.appendChild(kdaCell);
+
+
+                    tableBody.appendChild(row);
+                }
+            }
+        })
+        .catch(error => {
+            console.log("Error fetching JSON data:", error);
+        });
+</script>
 </body>
 </html>
