@@ -4,6 +4,7 @@ import de.blueteawolf.riotstats.Repos.MatchAnalyzeRepository;
 import de.blueteawolf.riotstats.api.MatchAnalyzer;
 import de.blueteawolf.riotstats.api.Role;
 import de.blueteawolf.riotstats.api.builds.Build;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,8 +133,8 @@ public class MatchAPIController {
 
     @GetMapping("/api/builds")
     @ResponseBody
-    public String getBuilds(@RequestParam String puuID) {
-        List<MatchAnalyzer> matchesList = matchAnalyzeRepository.findByPuuID(puuID);
+    public String getBuilds(@RequestParam String summonerPuuID) {
+        List<MatchAnalyzer> matchesList = matchAnalyzeRepository.findByPuuID(summonerPuuID);
         Map<String, List<Build>> championBuilds = new HashMap<>();
 
         for (MatchAnalyzer match : matchesList) {
@@ -171,7 +172,6 @@ public class MatchAPIController {
                         currentBuild.addLosses(builds.get(j).getLosses());
                         builds.remove(j);
                         buildsSize--;
-                        System.out.println("FOUND A SUBSET");
                     }
                 }
             }
@@ -186,26 +186,46 @@ public class MatchAPIController {
                 System.out.println("LOSSES: " + build.getLosses());
             }
         }
+        System.out.println("-----------");
 
-        return championBuilds.toString();
+        JSONObject championBuildData = new JSONObject();
+
+        for (String champion : championBuilds.keySet()) {
+            JSONArray buildsArray = new JSONArray();
+            for (Build build : championBuilds.get(champion)) {
+                JSONObject championBuildInfo = new JSONObject();
+                championBuildInfo.put("BUILD", build.getBuild());
+                championBuildInfo.put("WINS", build.getWins());
+                championBuildInfo.put("LOSSES", build.getLosses());
+                buildsArray.put(championBuildInfo);
+            }
+            championBuildData.put(champion, buildsArray);
+
+        }
+        System.out.println(championBuildData.toString());
+        return championBuildData.toString();
     }
-
 
     private boolean isSubset(int[] array1, int[] array2) {
         HashSet<Integer> set = new HashSet<>();
 
         if (array1.length >= array2.length) {
             for (int num : array1) {
-                set.add(num);
+                if(num != 0) {
+                    set.add(num);
+                }
             }
         } else {
             for (int num : array2) {
+                if(num != 0) {
+                    set.add(num);
+                }
                 set.add(num);
             }
         }
 
         for (int num : array2) {
-            if (!set.contains(num)) {
+            if (!set.contains(num) && num != 0) {
                 return false;
             }
         }
